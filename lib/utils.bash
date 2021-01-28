@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for ansible.
-GH_REPO="https://github.com/Bleacks/asdf-ansible-plugin"
+GH_REPO="https://github.com/ansible/ansible"
 
 fail() {
   echo -e "asdf-ansible: $*"
@@ -13,9 +13,9 @@ fail() {
 curl_opts=(-fsSL)
 
 # NOTE: You might want to remove this if ansible is not hosted on GitHub releases.
-if [ -n "${GITHUB_API_TOKEN:-}" ]; then
-  curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
-fi
+# if [ -n "${GITHUB_API_TOKEN:-}" ]; then
+#   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
+# fi
 
 sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
@@ -25,7 +25,7 @@ sort_versions() {
 list_github_tags() {
   git ls-remote --tags --refs "$GH_REPO" |
     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+    sed 's/^v//' | grep -Ev '^[0-9].*' # NOTE: You might want to adapt this sed to remove non-version strings from tags
 }
 
 list_all_versions() {
@@ -65,7 +65,7 @@ install_version() {
 
     # TODO: Asert ansible executable exists.
     local tool_cmd
-    tool_cmd="$(echo "ansible --version" | cut -d' ' -f1)"
+    tool_cmd="$(echo "ansible --version" | head -n1 | awk '{ print $2 }')"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
     echo "ansible $version installation was successful!"
