@@ -40,7 +40,12 @@ download_release() {
   filename="$2"
 
   # TODO: Adapt the release URL convention for ansible
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  if [ "$version" == 'latest' ]
+  then
+    url=`curl -s "$GH_REPO/releases/latest" | jq '.html_url' -r`
+  else  
+    url="$GH_REPO/archive/v${version}.tar.gz"
+  fi
 
   echo "* Downloading ansible release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
