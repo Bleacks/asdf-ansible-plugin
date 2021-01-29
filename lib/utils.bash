@@ -48,16 +48,17 @@ download_release() {
 }
 
 install_version() {
+  set -x
   local install_type="$1"
   local version="$2"
   local install_path="$3"
 
-  if [ "$version" == 'latest' ]; then
-    version=$(curl -s "$GH_API_REPO/releases/latest" | jq '.tag_name' -r | sed 's/^v//')
-  fi
-
   if [ "$install_type" != "version" ]; then
     fail "asdf-ansible supports release installs only"
+  fi
+
+  if [ "$version" == 'latest' ]; then
+    version=$(curl -s "$GH_API_REPO/releases/latest" | jq '.tag_name' -r | sed 's/^v//')
   fi
 
   # TODO: Adapt this to proper extension and adapt extracting strategy.
