@@ -4,6 +4,7 @@ set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for ansible.
 GH_REPO="https://github.com/ansible/ansible"
+GH_API_REPO="https://api.github.com/repos/ansible/ansible"
 
 fail() {
   echo -e "asdf-ansible: $*"
@@ -52,7 +53,7 @@ install_version() {
   local install_path="$3"
 
   if [ "$version" == 'latest' ]; then
-    version=$(curl -s "$GH_REPO/releases/latest" | jq '.tag_name' -r)
+    version=$(curl -s "$GH_API_REPO/releases/latest" | jq '.tag_name' -r | sed 's/^v//')
   fi
 
   if [ "$install_type" != "version" ]; then
