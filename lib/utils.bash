@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -xeuo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for ansible.
 GH_REPO="https://github.com/ansible/ansible"
@@ -48,7 +48,6 @@ download_release() {
 }
 
 install_version() {
-  set -x
   local install_type="$1"
   local version="$2"
   local install_path="$3"
