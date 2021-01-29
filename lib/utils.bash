@@ -40,11 +40,7 @@ download_release() {
   filename="$2"
 
   # TODO: Adapt the release URL convention for ansible
-  if [ "$version" == 'latest' ]; then
-    url=$(curl -s "$GH_REPO/releases/latest" | jq '.html_url' -r)
-  else  
-    url="$GH_REPO/archive/v${version}.tar.gz"
-  fi
+  url="$GH_REPO/archive/v${version}.tar.gz"
 
   echo "* Downloading ansible release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -54,6 +50,10 @@ install_version() {
   local install_type="$1"
   local version="$2"
   local install_path="$3"
+
+  if [ "$version" == 'latest' ]; then
+    version=$(curl -s "$GH_REPO/releases/latest" | jq '.tag_name' -r)
+  fi
 
   if [ "$install_type" != "version" ]; then
     fail "asdf-ansible supports release installs only"
