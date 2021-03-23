@@ -26,7 +26,7 @@ sort_versions() {
 list_github_tags() {
   git ls-remote --tags --refs "$GH_REPO" |
     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//' | grep -E '^[0-9\.\-a-z]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+    sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
 }
 
 list_all_versions() {
@@ -73,7 +73,7 @@ install_version() {
     tool_cmd="$(echo "ansible --version" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
-    test $("$install_path/bin/$tool_cmd" --version | grep -E '^ansible [0-9\.\-a-z]+' | cut -d ' ' -f 2) == "$version"
+    test $("$install_path/bin/$tool_cmd" --version | grep -E '^ansible [0-9a-z\.\-]+' | cut -d ' ' -f 2) == "$version"
 
     echo "ansible $version installation was successful!"
   ) || (
