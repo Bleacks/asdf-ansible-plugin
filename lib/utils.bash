@@ -23,17 +23,17 @@ sort_versions() {
     LC_ALL=C sort -t. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | awk '{print $2}'
 }
 
-# list_github_tags() {
+list_github_tags() {
 #   git ls-remote --tags --refs "$GH_REPO" |
 #     grep -o 'refs/tags/.*' | cut -d/ -f3- |
 #     sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
-# }
+  curl -L -s 'https://pypi.org/pypi/ansible/json' | jq  -r '.releases | keys | .[]' | sort -V
+}
 
 list_all_versions() {
   # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
   # Change this function if ansible has other means of determining installable versions.
-  # list_github_tags
-  wget -qO - 'https://pypi.org/pypi/ansible/json' | jq  -r '.releases | keys | .[]' | sort -V
+  list_github_tags
 }
 
 download_release() {
