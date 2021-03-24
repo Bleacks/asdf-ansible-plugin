@@ -24,9 +24,10 @@ sort_versions() {
 }
 
 list_github_tags() {
-  git ls-remote --tags --refs "$GH_REPO" |
-    grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+#   git ls-remote --tags --refs "$GH_REPO" |
+#     grep -o 'refs/tags/.*' | cut -d/ -f3- |
+#     sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+  curl -L -s "https://pypi.org/pypi/ansible/json" | jq  -r '.releases | keys | .[]' | sort -V
 }
 
 list_all_versions() {
@@ -57,16 +58,18 @@ install_version() {
   fi
 
   if [ "$version" == 'latest' ]; then
-    version=$(curl -s "$GH_API_REPO/releases/latest" | jq '.tag_name' -r | sed 's/^v//')
+    version=$(list_github_tags | tail -n1)
+    # version=$(curl -s "$GH_API_REPO/releases/latest" | jq '.tag_name' -r | sed 's/^v//')
   fi
 
   # TODO: Adapt this to proper extension and adapt extracting strategy.
   local release_file="$install_path/ansible-$version.tar.gz"
   (
-    mkdir -p "$install_path"
-    download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
-    rm "$release_file"
+    # mkdir -p "$install_path"
+    # download_release "$version" "$release_file"
+    # tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
+    # rm "$release_file"
+    pip install ansible=="$version"
 
     # TODO: Asert ansible executable exists.
     local tool_cmd
