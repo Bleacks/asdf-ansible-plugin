@@ -24,9 +24,9 @@ sort_versions() {
 }
 
 list_github_tags() {
-#   git ls-remote --tags --refs "$GH_REPO" |
-#     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-#     sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+  #   git ls-remote --tags --refs "$GH_REPO" |
+  #     grep -o 'refs/tags/.*' | cut -d/ -f3- |
+  #     sed 's/^v//' | grep -E '^[0-9a-z\.\-]+' # NOTE: You might want to adapt this sed to remove non-version strings from tags
   curl -L -s 'https://pypi.org/pypi/ansible/json' | jq  -r '.releases | keys | .[]' | sort -V
 }
 
