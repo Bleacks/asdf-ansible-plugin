@@ -17,6 +17,7 @@
 # Dependencies
 
 - `bash`, `curl`, `tar`: generic POSIX utilities.
+- `jq`: for parsing json
 - `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
 
 # Install
@@ -26,7 +27,7 @@ Plugin:
 ```shell
 asdf plugin add ansible
 # or
-asdf plugin add https://github.com/Bleacks/asdf-ansible.git
+asdf plugin add ansible https://github.com/Bleacks/asdf-ansible.git
 ```
 
 ansible:
